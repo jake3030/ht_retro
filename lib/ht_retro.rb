@@ -1,19 +1,19 @@
 module HoptoadNotifier
-  HEADERS = {
+  HEADERS.replace({
     "X-Hoptoad-Client-Name"    =>"Hoptoad Notifier", 
     "Content-type"             =>"application/x-yaml", 
     "X-Hoptoad-Client-Version" =>"1.2.4", 
     "Accept"                   =>"text/xml, application/xml"
-  }
+  })
   
   class Sender
-    NOTICES_URI = '/notices/'.freeze
+    self.send(:remove_const, "NOTICES_URI")
+    NOTICES_URI = '/notices/'
   end
   
   class << self
     
     def notify_or_ignore(exception, opts = {})
-      #debugger
       notice = build_notice_for(exception, opts)
       send_notice(notice) if configuration.public?
     end
