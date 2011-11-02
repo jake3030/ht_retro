@@ -66,7 +66,6 @@ module HoptoadNotifier
       end
       if notice[:environment].is_a?(Hash)
         notice[:environment] = filter_parameters(notice[:environment]) if respond_to?(:filter_parameters)
-        notice[:environment] = clean_hoptoad_environment(notice[:environment])
       end
       {:notice => clean_non_serializable_data(notice)}
     end
@@ -118,14 +117,6 @@ module HoptoadNotifier
     def clean_hoptoad_params params #:nodoc:
       params.each do |k, v|
         params[k] = "[FILTERED]" if HoptoadNotifier.configuration.params_filters.any? do |filter|
-          k.to_s.match(/#{filter}/)
-        end
-      end
-    end
-
-    def clean_hoptoad_environment env #:nodoc:
-      env.each do |k, v|
-        env[k] = "[FILTERED]" if HoptoadNotifier.configuration.environment_filters.any? do |filter|
           k.to_s.match(/#{filter}/)
         end
       end
